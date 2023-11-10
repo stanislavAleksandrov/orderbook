@@ -2,7 +2,7 @@ package org.example.domain;
 
 import org.example.domain.order.Order;
 
-import java.util.*;
+import java.util.PriorityQueue;
 
 public class OrderBook {
     private String symbol;
@@ -12,7 +12,7 @@ public class OrderBook {
     public OrderBook(String symbol) {
         this.symbol = symbol;
         this.buyOrders = new PriorityQueue<>((o1, o2) -> Double.compare(o2.getPrice(), o1.getPrice()));
-        this.sellOrders = new PriorityQueue<>(Comparator.comparingDouble(Order::getPrice));
+        this.sellOrders = new PriorityQueue<>(java.util.Comparator.comparingDouble(Order::getPrice));
     }
 
     public void addOrder(Order order) {
@@ -23,11 +23,11 @@ public class OrderBook {
         }
     }
 
-    public Optional<Order> getNextBuyOrder() {
-        return Optional.ofNullable(buyOrders.poll());
+    public java.util.Optional<org.example.domain.order.Order> getNextBuyOrder() {
+        return java.util.Optional.ofNullable(buyOrders.poll());
     }
 
-    public Optional<Order> getNextSellOrder() {
-        return Optional.ofNullable(sellOrders.poll());
+    public java.util.Optional<org.example.domain.order.Order> getNextSellOrder() {
+        return java.util.Optional.ofNullable(sellOrders.poll());
     }
 }

@@ -1,7 +1,5 @@
 package org.example.domain.order;
 
-import org.example.domain.order.Order;
-
 import java.util.UUID;
 
 public class PerpetualOrder implements Order {
