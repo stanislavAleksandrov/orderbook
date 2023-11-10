@@ -2,6 +2,7 @@ package org.example.domain;
 
 import org.example.domain.order.Order;
 
+import java.util.Optional;
 import java.util.PriorityQueue;
 
 public class OrderBook {
@@ -23,11 +24,11 @@ public class OrderBook {
         }
     }
 
-    public java.util.Optional<org.example.domain.order.Order> getNextBuyOrder() {
-        return java.util.Optional.ofNullable(buyOrders.poll());
+    public Optional<org.example.domain.order.Order> getNextBuyOrder() {
+        return Optional.ofNullable(buyOrders.poll());
     }
 
-    public java.util.Optional<org.example.domain.order.Order> getNextSellOrder() {
-        return java.util.Optional.ofNullable(sellOrders.poll());
+    public Optional<org.example.domain.order.Order> getNextSellOrder() {
+        return Optional.ofNullable(sellOrders.poll());
     }
 }
