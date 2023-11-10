@@ -7,7 +7,7 @@ public class AbstractOrder implements Order {
     private final String symbol;
     private final boolean isBuyOrder;
     private final double price;
-    private final int quantity;
+    private int quantity;
 
     public AbstractOrder(String symbol, boolean isBuyOrder, double price, int quantity) {
         this.orderId = UUID.randomUUID().toString();
@@ -41,4 +41,10 @@ public class AbstractOrder implements Order {
     public int getQuantity() {
         return quantity;
     }
+
+    @Override
+    public void reduceQuantity(int amount) {
+        quantity -= amount;
+    }
+
 }

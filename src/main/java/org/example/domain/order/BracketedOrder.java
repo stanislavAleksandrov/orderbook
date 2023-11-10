@@ -51,4 +51,9 @@ public class BracketedOrder implements Order {
     public int getQuantity() {
         return primaryOrder.getQuantity();
     }
+
+    @Override
+    public void reduceQuantity(int count) {
+        primaryOrder.reduceQuantity(count);
+    }
 }

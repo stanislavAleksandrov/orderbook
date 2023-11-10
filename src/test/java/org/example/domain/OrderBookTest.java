@@ -24,6 +24,32 @@ class OrderBookTest {
     }
 
     @Test
+    void testOrderMatching() {
+        OrderBook orderBook = new OrderBook("UBER");
+
+        orderBook.addOrder(new LimitOrder("UBER", true, 150.0, 5));
+        orderBook.addOrder(new LimitOrder("UBER", true, 148.0, 7));
+
+        orderBook.addOrder(new LimitOrder("UBER", false, 155.0, 8));
+        orderBook.addOrder(new LimitOrder("UBER", false, 150.0, 5));
+
+        Optional<Order> buyOrder = orderBook.getNextBuyOrder();
+        Optional<Order> sellOrder = orderBook.getNextSellOrder();
+
+        assertTrue(buyOrder.isPresent());
+        assertTrue(sellOrder.isPresent());
+
+        assertEquals(148, buyOrder.get().getPrice());
+        assertEquals(155, sellOrder.get().getPrice());
+
+        Optional<Order> buyOrder2 = orderBook.getNextBuyOrder();
+        Optional<Order> sellOrder2 = orderBook.getNextSellOrder();
+
+        assertFalse(buyOrder2.isPresent());
+        assertFalse(sellOrder2.isPresent());
+    }
+
+    @Test
     void addOrderAndGetNextSellOrder() {
         OrderBook orderBook = new OrderBook("UBER");
 
@@ -40,22 +66,18 @@ class OrderBookTest {
     void testOrderSorting() {
         OrderBook orderBook = new OrderBook("UBER");
 
-        // Adding buy orders with descending prices
         orderBook.addOrder(new LimitOrder("UBER", true, 150.0, 10));
         orderBook.addOrder(new LimitOrder("UBER", true, 145.0, 8));
         orderBook.addOrder(new LimitOrder("UBER", true, 155.0, 5));
 
-        // Adding sell orders with ascending prices
         orderBook.addOrder(new LimitOrder("UBER", false, 160.0, 12));
         orderBook.addOrder(new LimitOrder("UBER", false, 155.0, 6));
         orderBook.addOrder(new LimitOrder("UBER", false, 165.0, 9));
 
-        // Retrieving buy orders should return orders in descending price order
         assertEquals(155.0, orderBook.getNextBuyOrder().get().getPrice());
         assertEquals(150.0, orderBook.getNextBuyOrder().get().getPrice());
         assertEquals(145.0, orderBook.getNextBuyOrder().get().getPrice());
 
-        // Retrieving sell orders should return orders in ascending price order
         assertEquals(155.0, orderBook.getNextSellOrder().get().getPrice());
         assertEquals(160.0, orderBook.getNextSellOrder().get().getPrice());
         assertEquals(165.0, orderBook.getNextSellOrder().get().getPrice());

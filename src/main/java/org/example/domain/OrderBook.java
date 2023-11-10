@@ -18,9 +18,15 @@ public class OrderBook {
 
     public void addOrder(Order order) {
         if (order.isBuyOrder()) {
-            buyOrders.offer(order);
+            matchSellOrders(order);
+            if (order.getQuantity() > 0) {
+                buyOrders.offer(order);
+            }
         } else {
-            sellOrders.offer(order);
+            matchBuyOrders(order);
+            if (order.getQuantity() > 0) {
+                sellOrders.offer(order);
+            }
         }
     }
 
@@ -30,5 +36,43 @@ public class OrderBook {
 
     public Optional<org.example.domain.order.Order> getNextSellOrder() {
         return Optional.ofNullable(sellOrders.poll());
+    }
+
+    private void matchSellOrders(Order buyOrder) {
+        while (!sellOrders.isEmpty()) {
+            Order sellOrder = sellOrders.peek();
+            if (sellOrder.getPrice() <= buyOrder.getPrice()) {
+                int quantity = Math.min(buyOrder.getQuantity(), sellOrder.getQuantity());
+                buyOrder.reduceQuantity(quantity);
+                sellOrder.reduceQuantity(quantity);
+                if (sellOrder.getQuantity() == 0) {
+                    sellOrders.poll();
+                }
+                if (buyOrder.getQuantity() == 0) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
+    private void matchBuyOrders(Order sellOrder) {
+        while (!buyOrders.isEmpty()) {
+            Order buyOrder = buyOrders.peek();
+            if (buyOrder.getPrice() >= sellOrder.getPrice()) {
+                int quantity = Math.min(buyOrder.getQuantity(), sellOrder.getQuantity());
+                buyOrder.reduceQuantity(quantity);
+                sellOrder.reduceQuantity(quantity);
+                if (buyOrder.getQuantity() == 0) {
+                    buyOrders.poll();
+                }
+                if (sellOrder.getQuantity() == 0) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
     }
 }

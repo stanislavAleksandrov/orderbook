@@ -6,4 +6,5 @@ public interface Order {
     boolean isBuyOrder();
     double getPrice();
     int getQuantity();
+    void reduceQuantity(int count);
 }
